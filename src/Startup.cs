@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using src.Infrastructure.IoC.Configurations;
 
 namespace dotnet_poc_stock
 {
@@ -26,6 +27,12 @@ namespace dotnet_poc_stock
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            // as classes de dentro da pasta configurations servem para extender o "services" do startUp
+            // dessa maneira criamos classes específicas para o que precisamos configurar e chamas os métodos aqui
+            // evitando asssim que o startUp fique gigante com várias injeções
+            // no momento temps o AddSwaggerSetup que é a config de Swagger, mas podemos ter outros como AddDatabaseSetup...
+            services.AddDependencyInjection();
+            services.AddSwaggerSetup();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,11 +43,11 @@ namespace dotnet_poc_stock
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseHttpsRedirection();
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,0 +1,22 @@
+version: "3"
+services:
+  poc-stock:
+    build: .
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - 'ConnectionString=Server=postgres;Port=5432;Database=postgres;User Id=postgres;Password=123456;SearchPath=public;'
+    ports:
+      - 80:80
+    links:
+      - "postgres"
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "123456"
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
